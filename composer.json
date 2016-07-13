@@ -1,6 +1,6 @@
 {
     "name": "zhangyijiang/array-request",
-    "description": "Experimental patch to Collective\\FormBuilder and Laravel middleware to support single dimension array form inputs",
+    "description": "Experimental patch to Collective\\FormBuilder and Laravel middleware to better support array form inputs",
     "license": "MIT",
     "keywords": ["laravel", "middleware", "forms"],
     "require": {
