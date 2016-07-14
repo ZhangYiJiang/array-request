@@ -2,7 +2,7 @@
 
 Playing around with how the Laravel framework itself can facilitate multidimension arrays as inputs better than it does now. This is the result of that using the [`Collective\Form` helper](laravelcollective.com/docs/5.2/html) and some middlewares.
 
- ## Motivation
+## Motivation
 
 Suppose you have a model with some array data
 
