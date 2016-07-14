@@ -1,8 +1,8 @@
 # `ArrayRequest` - Experimental multidimensional input array support in Laravel
 
-Playing around with how the Laravel framework itself can facilitate multidimension
- arrays as inputs better than it does now. This is the result of that using
- the `Collective\Form` helper and some middlewares. Some examples:
+Playing around with how the Laravel framework itself can facilitate multidimension arrays as inputs better than it does now. This is the result of that using the [`Collective\Form` helper](laravelcollective.com/docs/5.2/html) and some middlewares.
+
+ ## Motivation
 
 Suppose you have a model with some array data
 
@@ -55,3 +55,35 @@ This works, but it means having to explicitly number every input field. This mea
 ```
 The solution to the above is an extension to the `FormBuilder` class which will correctly translate the form names to use the correct value when form model binding is used, and a middleware which will unmangle the form data.
 
+## Installation
+
+The package is currently in development, so it is not listed on packagist. Please do not use this in production environment. To install this package in its current state, follow [Composer's instructions for installing from VCS](https://getcomposer.org/doc/05-repositories.md#vcs) and add this repo's URL to the list, then add this package to your composer.json file
+
+```
+composer require zhangyijiang/array-request:dev-master
+```
+
+To use the patched form helper, replace `Collective\Html\HtmlServiceProvider` with `ZhangYiJiang\ArrayRequest\HtmlServiceProvider`
+
+```php
+// config/app.php
+
+'providers' => [
+    // ...
+    ZhangYiJiang\ArrayRequest\HtmlServiceProvider::class,
+    // ...
+],
+```
+
+and add the middleware to the HTTP Kernel
+
+```php
+// app/Http/Kernel.php
+
+protected $routeMiddleware = [
+    // ...
+    'form.array' => \ZhangYiJiang\ArrayRequest\Middleware::class,
+];
+```
+
+Then simply rememeber to use the Middleware on the routes which there are array inputs that need unmangling.
