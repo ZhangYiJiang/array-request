@@ -12,14 +12,14 @@ class FormBuilder extends LaravelFormBuilder
      * @var array
      */
     protected $modelAttributeAccess = [];
-
-    protected function getModelValueAttribute($name)
+    
+    public function getValueAttribute($name, $value = null)
     {
-        if (str_contains($name, '[]')) {
+        if (is_string($name) && str_contains($name, '[]')) {
             $name = $this->rewriteModelAttributeName($name);
         }
-
-        return parent::getModelValueAttribute($name);
+        
+        return parent::getValueAttribute($name, $value);
     }
 
     protected function rewriteModelAttributeName($name)

@@ -15,6 +15,13 @@ class FormBuilderTest extends PHPUnit_Framework_TestCase
      * @var FormBuilder
      */
     protected $formBuilder;
+    
+    /**
+     * @var \Illuminate\Session\Store
+     */
+    protected $session;
+    
+    protected $old = [];
 
     protected function setUp()
     {
@@ -27,8 +34,40 @@ class FormBuilderTest extends PHPUnit_Framework_TestCase
         $viewFactory = Mockery::mock(Factory::class);
         $htmlBuilder = new HtmlBuilder($urlGenerator, $viewFactory);
         $this->formBuilder = new FormBuilder($htmlBuilder, $urlGenerator, $viewFactory, 'abc');
+        
+        // Set up session
+        $this->session = Mockery::mock(\Illuminate\Session\SessionInterface::class);
+        $this->session->shouldReceive('getOldInput')
+            ->andReturnUsing(function($key){
+                return array_get($this->old, $key);
+            });
+        
+        $this->formBuilder->setSessionStore($this->session);
     }
-
+    
+    protected function tearDown()
+    {
+        parent::tearDown();
+        
+        Mockery::close();
+    }
+    
+    /**
+     * @param string|array $key
+     * @param mixed|null $value
+     * @return $this
+     */
+    protected function addOldData($key, $value = NULL)
+    {
+        if (is_null($value) && is_array($key)) {
+            $this->old = array_merge($this->old, $key);
+        } else {
+            $this->old[$key] = $value;
+        }
+        
+        return $this;
+    }
+    
     public function testFlatArray()
     {
         $model = new TestModel([
@@ -86,18 +125,25 @@ class FormBuilderTest extends PHPUnit_Framework_TestCase
             $this->assertEquals($value, $this->formBuilder->getValueAttribute($key));
         }
     }
+    
+    public function testOldData()
+    {
+        $this->addOldData('flat', ['Twilight', 'Applejack', 'Rarity', ]);
+    
+        $values[] = $this->formBuilder->getValueAttribute('flat[]');
+        $values[] = $this->formBuilder->getValueAttribute('flat[]');
+        $values[] = $this->formBuilder->getValueAttribute('flat[]');
+        $values[] = $this->formBuilder->getValueAttribute('flat[]');
+    
+        $this->assertEquals(['Twilight', 'Applejack', 'Rarity', null, ], $values);
+    }
 }
 
 class FormModel extends Model
 {
     use FormAccessible;
-
-    protected $table = 'models';
-
-
 }
 
 class TestModel extends Model
 {
-    protected $table = 'models';
 }
