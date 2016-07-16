@@ -1,5 +1,7 @@
 # `ArrayRequest` - Experimental multidimensional input array support in Laravel
 
+[![Build Status](https://travis-ci.org/ZhangYiJiang/array-request.svg?branch=master)](https://travis-ci.org/ZhangYiJiang/array-request)
+
 Playing around with how the Laravel framework itself can facilitate multidimension arrays as inputs better than it does now. This is the result of that using the [`Collective\Form` helper](laravelcollective.com/docs/5.2/html) and some middlewares.
 
 ## Motivation
