@@ -36,7 +36,7 @@ class FormBuilderTest extends PHPUnit_Framework_TestCase
         $this->formBuilder = new FormBuilder($htmlBuilder, $urlGenerator, $viewFactory, 'abc');
         
         // Set up session
-        $this->session = Mockery::mock(\Illuminate\Session\SessionInterface::class);
+        $this->session = Mockery::mock(\Illuminate\Contracts\Session\Session::class);
         $this->session->shouldReceive('getOldInput')
             ->andReturnUsing(function($key){
                 return array_get($this->old, $key);
